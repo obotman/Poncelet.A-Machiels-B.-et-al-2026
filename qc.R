@@ -1,4 +1,3 @@
-rm(list = ls())
 library(ggplot2)
 library(Seurat)
 library(readr)
@@ -8,11 +7,7 @@ library(tidyseurat)
 library(dittoSeq)
 library(gdata)
 
-plan("multicore", workers = 10)
-options(future.globals.maxSize= 20 * 1024 * 1024 * 1024)
-
-setwd("~/Projects/Arthur/scRNAseq_Analysis2/QC")
-so <- readRDS("../RawData/so.rds") #soList
+so <- readRDS("seurat_object.rds")
 
 expName <- c("d8","d38","d120")
 
@@ -107,6 +102,4 @@ lapply(so,ncol)
 # $d120
 # [1] 22397
 # total = 63542 cells after filtering
-
-
 
