@@ -1,5 +1,3 @@
-rm(list = ls())
-
 library(readr)
 library(Seurat)
 library(dplyr)
@@ -8,18 +6,11 @@ library(future)
 library(stringr)
 library(tidyverse)
 
-plan("multicore", workers = 10)
-options(future.globals.maxSize= 20 * 1024 * 1024 * 1024)
-
-## Load data, demultiplex and create a seurat object
-
-setwd("~/Projects/Arthur/Analysis")
-
 # get RNA & Ab count
 expName <- c("d8","d38","d120")
 so <- list()
 for (name in expName){
-  counts <- read.csv(paste0("RawData/Combined_DBEC_MolsPerCell_",name,".csv"), 
+  counts <- read.csv(paste0("Combined_DBEC_MolsPerCell_",name,".csv"), 
                      sep = ",", header = T, row.names=1, skip = 7)
   Ab <- counts[grep(names(counts),pattern = "pAbO")] 
   # colnames(Ab) <- colnames(Ab) %>% gsub("[.]","_",.)
@@ -27,7 +18,7 @@ for (name in expName){
   #%>% clean_names()
   
   # get metadata
-  tag <- read.table(paste0("RawData/Sample_Tag_Calls_",name,".csv"),
+  tag <- read.table(paste0("Sample_Tag_Calls_",name,".csv"),
                     sep = ",", header = T, skip = 0)
   metadata <- column_to_rownames(tag, var="Cell_Index")
   barcodeAll <- rownames(counts)
@@ -66,5 +57,4 @@ for (name in expName){
   rm(seuObj)
   gc()
 }
-write_rds(so, file = "RawData/so.rds")
 
